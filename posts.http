@@ -1,0 +1,9 @@
+POST http://localhost:3001/links
+Content-Type: application/json
+
+
+
+{
+    "code": "fulano",
+    "url": "https://www.google.com"
+}
