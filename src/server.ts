@@ -2,6 +2,7 @@ import fastify from "fastify";
 import {z} from 'zod'
 import { sql } from "./connections/postgres";
 import postgres from "postgres";
+import { redis } from "./connections/redis";
 
 const app = fastify()
 
@@ -23,11 +24,27 @@ app.get("/:code", async(req, reply)=>{
     const result = await sql`
         select id, original_url from shortLinks where shortLinks.code = ${code}
     `
-    return reply.send(result)
     
+    const link = result[0]
 
+    await redis.zIncrBy('metrics', 1, String(link.id))
+
+    return reply.redirect(301, link.original_url)
 })
 
+
+app.get("/api/metrics", async(req, reply)=>{
+    const result = await redis.zRangeByScoreWithScores("metrics", 0, 50)
+
+    const metrics = result.sort((a,b)=> b.score - a.score).map(item=>{
+        return {
+            shortLinkId: Number(item.value),
+            clicks: item.score
+        }
+    })
+
+    return metrics
+})
 
 app.post('/api/links', async (req, reply) => {
     
