@@ -46,7 +46,7 @@ app.get("/api/metrics", async(req, reply)=>{
     return metrics
 })
 
-app.post('/api/links', async (req, reply) => {
+app.post('/links', async (req, reply) => {
     
 
 
