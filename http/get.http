@@ -4,10 +4,10 @@ GET http://localhost:3001/api/links
 
 GET http://localhost:3001/fulano
 
-
 ###
 
 GET http://localhost:3001/alvaro
+
 ###
 
 GET http://localhost:3001/api/metrics
